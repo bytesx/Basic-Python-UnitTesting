@@ -1,5 +1,7 @@
 import unittest
-from shopping_cart import Item, ShoppingCart
+from shopping_cart import Item, ShoppingCart, NotExistError
+
+API_VERSION = 17
 
 class TestShoppingCart(unittest.TestCase):
 
@@ -35,6 +37,28 @@ class TestShoppingCart(unittest.TestCase):
         self.assertIs(item, self.pan)
         self.assertIsNot(item, self.jugo)
 
+    def test_exception(self):
+        with self.assertRaises(NotExistError):
+            self.shopping_cart.get_item(self.jugo)
+
+    def test_total(self):
+        total = self.shopping_cart.total()
+        self.assertGreater(total, 0)
+        self.assertLess(total, self.pan.price  + 1.0)
+        self.assertEqual(total, self.pan.price)
+
+    def test_codigo(self):
+        self.assertRegex(self.pan.code(), self.pan.name)
+
+    def test_fail(self):
+        if 2 > 3:
+            self.fail("Dos no es mayor que tres")
+
+    # @unittest.skip("Motivo de Skip")
+    # @unittest.skipIf(API_VERSION < 18, "API Version Obsoleta")
+    @unittest.skipUnless(3 > 5 , "Motivos")
+    def test_prueba_skip(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()

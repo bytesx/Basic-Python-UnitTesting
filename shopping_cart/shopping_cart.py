@@ -1,11 +1,14 @@
+class NotExistError(Exception):
+    pass
+
 class Item:
     
     def __init__(self, name, price):
         self.name = name
         self.price = price
 
-    def __str__(self):
-        return self.name
+    def code(self):
+        return "{}-123456789".format(self.name)    
 
 class ShoppingCart:
 
@@ -19,7 +22,16 @@ class ShoppingCart:
         return len(self.items) > 0
 
     def remove_item(self, item):
-        self.items.remove(item)    
+        self.items.remove(item)
+
+    def total(self):
+        return sum([  item.price for item in self.items ])        
 
     def get_item(self, item):
-        return self.items[ self.items.index(item) -1]
+        if item not in self.items:
+            raise NotExistError('Item does not exist')
+        else:
+            return self.items[ self.items.index(item) -1]
+
+    def last(self):
+        return self.items[-1]        
